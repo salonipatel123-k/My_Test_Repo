@@ -1,7 +1,7 @@
 ;;;;;;;Shree Ganeshay Namah....;;;;;;
 
 [#Part: CMP TallyShopFeatures Left]
-	Add : lines : At Beginning: KKSurgical_UPIId
+	Add : lines : At Beginning: KKSurgical_UPIId,KKSurgical_UserName
 	
 [Line: KKSurgical_UPIId]
     Fields    : Long Prompt, KKSurgical_UPIId	
@@ -17,6 +17,19 @@
 	Full Width:yes
 	;Max:100
 	
+[Line: KKSurgical_UserName]
+    Fields    : Long Prompt, KKSurgical_UserName	
+    Local     : Field : Long Prompt : Set as    : $$LocaleString:"Enter User name "
+	Local     : Field : Long Prompt : Color	  : Blue
+    Space Top : 0.4
+
+[Field: KKSurgical_UserName]
+    Use         : Name Field
+    Set as		: $KKSurgical_UPIId
+    Set Always	: Yes
+	Full Width:yes
+
+
 
 [System:UDF]
 	KKSurgical_UPIId  : String  : 4050
