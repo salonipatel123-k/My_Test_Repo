@@ -1,0 +1,135 @@
+;;;;;;;Shree Ganeshay Namah....;;;;;;
+
+[#Part: CMP TallyShopFeatures Left]
+	Add : lines : At Beginning: KKSurgical_UPIId
+	
+[Line: KKSurgical_UPIId]
+    Fields    : Long Prompt, KKSurgical_UPIId	
+    Local     : Field : Long Prompt : Set as    : $$LocaleString:"Enter UPI ID "
+	Local     : Field : Long Prompt : Color	  : Blue
+    Space Top : 0.4
+
+[Field: KKSurgical_UPIId]
+    Use         : Name Field
+    Storage     : KKSurgical_UPIId
+    Set as		: $KKSurgical_UPIId
+    Set Always	: Yes
+	Full Width:yes
+	;Max:100
+	
+
+[System:UDF]
+	KKSurgical_UPIId  : String  : 4050
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[#Part: VCH GST AnalysisDetails]
+	Option:VCH GST AnalysisDetails_Sales:@@Issales
+	
+[!Part	:	VCH GST AnalysisDetails_Sales]
+	Add:Part:before	: VCH GST AnalysisDetailsActual	: PaymentLinkQRPart_New
+
+;[!Part:KK_PaymentQRCodePart]
+;
+;		Add			: Part	: before	: VCH GST AnalysisDetailsActual	: PaymentLinkQRPart_New
+;		Vertical	: No
+;
+;		Border		: Thin Left Right	: NOT @@InvSimple
+;		Space Right	: If @@InvSimple OR @@IsGSTAnalysisPrintNotAppl Then 0 Else 0.5
+;
+;		Local		: Part	: PaymentLinkQRPart_New	: Delete	: Space Top
+;		Local		: Part	: PaymentLinkQR_New		: Delete	: Space Top
+;
+;		Local		: Part	: PaymentLinkQRPart_New	: Invisible	: @@IsGSTAnalysisPrintNotAppl
+;		Local		: Part	: PaymentLinkQRPart_New	: Space Left: If @@InvSimple Then 0 Else 0.5
+
+
+[Part: PaymentLinkQRPart_New]
+    Part		: PaymentLinkQR_New
+	Space Top	: 0.1
+	Space Left	: 0.5
+	Space Right	: 0.5
+    Invisible	: No
+	Border:thinleft
+
+[Part: PaymentLinkQR_New]
+    Part		: PaymentLink QRCode_New, PaymentLink QRInfo_New
+    Vertical	: Yes
+	Space Top	: 0.4
+	Invisible	:No
+
+[Part: PaymentLink QRInfo_New]
+    Line : PaymentLink QRInfo_New
+
+[Line: PaymentLink QRInfo_New]
+   Field	: PaymentLink QRInfo_New
+
+[Field	: PaymentLink QRInfo_New]
+	Use			: Info Field
+	Info		: $$LocaleString:"Scan to pay"
+	Style		: Tiny
+	Width		: 1.18 Inch
+	Align		: Center
+
+
+[Part: PaymentLink QRCode_New]
+	  Line		: Dummy Line
+      QR Code	: "upi://pay?pa="+@@KKSurgical_UPIId1/*+"&tn="+@@MyBankHolderName+"&pn="+@@MyBankHolderName*/+"&mam=1"+"&am="+@@myBillAmount+"&cu="+"INR"
+      Width		: 1.18 Inch
+	  Height	: 1.18 Inch
+	  Border	: Thin Box
+
+
+[System:Formula]
+	KKSurgical_UPIId1:$KKSurgical_UPIId:Company:##SVCurrentCompany;$MerchantID:MerchantProfiles:##SVMerchantName
+	myBillAmount:$$String:@@mybillamountNumber
+    mybillamountNumber:$$Number:$Amount
+
+
+
+;Add:QR Code:"upi://pay?pa=anikht11-1@okicici&mam=1&am=22500&cu=INR"
+;Add:QR Code:upi://pay?pa=UPI_ID&pn=NAME&am=AMOUNT&cu=CURRENCY_CODE
+
+  
+;[#Field:vch nARRATION]
+;	Set as:@@PaymentLink
+
+ ;[#Part: EXPINV SignOff]
+	; Print BG:red
+  ; Delete:Option	: PymtReq EXPINV SignOff	: @@IsPaymentReqQRCodeAppl
+   ;Add:Option		: PymtReq EXPINV SignOff	: Yes
+   
+ ;[#Part: EXPINV LeftSign]
+  ;  Delete:Option	: EXPINV PymtReq LeftSign	: @@IsPaymentReqAppl
+	;Add:Option		: EXPINV PymtReq LeftSign	: yes
+
+;[#Part: PaymentLink]
+;   Delete:Invisible
+;   Add:Invisible:nO
+;
+;[#Part: PaymentLinkQRPart]
+;	Delete:Invisible
+;	add:Invisible:No
+
+;[#Line: CMP PaymentRequest]
+
+;;;;;;;;;;;;;;
+;[#Field: PaymentRequestConfigMethod]
+ ;   Delete:Table
+	;Add:Table:PaymentReqModes_New
+	
+
+;[Collection: PaymentReqModes_New]
+;
+;	Title		: $$LocaleString:"List of Methods"
+;
+;	List Name	: @@NotApplicable, @@PaymentReqQRCode
+;
+;	Format		: $Name
+;	Table Sort	: Default
+;	ClientOnly 	: Yes
+
+ 
+	
+
+ 
