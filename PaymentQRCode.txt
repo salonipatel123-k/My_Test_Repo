@@ -1,7 +1,7 @@
 ;;;;;;;Shree Ganeshay Namah....;;;;;;
 
 [#Part: CMP TallyShopFeatures Left]
-	Add : lines : At Beginning: KKSurgical_UPIId,KKSurgical_UserName
+	Add : lines : At Beginning: KKSurgical_UPIId;,KKSurgical_UserName
 	
 [Line: KKSurgical_UPIId]
     Fields    : Long Prompt, KKSurgical_UPIId	
@@ -45,17 +45,20 @@
 ;[!Part:KK_PaymentQRCodePart]
 ;
 ;		Add			: Part	: before	: VCH GST AnalysisDetailsActual	: PaymentLinkQRPart_New
-;		Vertical	: No
-;
-;		Border		: Thin Left Right	: NOT @@InvSimple
-;		Space Right	: If @@InvSimple OR @@IsGSTAnalysisPrintNotAppl Then 0 Else 0.5
-;
-;		Local		: Part	: PaymentLinkQRPart_New	: Delete	: Space Top
-;		Local		: Part	: PaymentLinkQR_New		: Delete	: Space Top
-;
-;		Local		: Part	: PaymentLinkQRPart_New	: Invisible	: @@IsGSTAnalysisPrintNotAppl
-;		Local		: Part	: PaymentLinkQRPart_New	: Space Left: If @@InvSimple Then 0 Else 0.5
+		Vertical	: No
 
+		Border		: Thin Left Right	: NOT @@InvSimple
+		Space Right	: If @@InvSimple OR @@IsGSTAnalysisPrintNotAppl Then 0 Else 0.5
+
+		Local		: Part	: PaymentLinkQRPart_New	: Delete	: Space Top
+		Local		: Part	: PaymentLinkQR_New		: Delete	: Space Top
+
+		Local		: Part	: PaymentLinkQRPart_New	: Invisible	: @@IsGSTAnalysisPrintNotAppl
+		Local		: Part	: PaymentLinkQRPart_New	: Space Left: If @@InvSimple Then 0 Else 0.5	
+	
+[#Part: VCH GST AnalysisDetailsActual]
+    Delete:Option		: VCH GST Analysis BottomLine		: @@IsPaymentReqQRCodeAppl
+	Add:Option			: VCH GST Analysis BottomLine		: @@Issales
 
 [Part: PaymentLinkQRPart_New]
     Part		: PaymentLinkQR_New
@@ -91,6 +94,28 @@
       Width		: 1.18 Inch
 	  Height	: 1.18 Inch
 	  Border	: Thin Box
+
+
+
+;;;;;;;;;;;;;UPI ID add;;;
+[#Part: EXPINV BankDetails]
+	Add:Line:After: EXPINV BankBranchInfo:EXPINV UPIid
+
+[Line:EXPINV UPIid]
+	Fields : Medium Prompt, EXPINV UPIid
+    Local  : Field : Medium Prompt   	: Set as    : $$LocaleString:"UPI ID:"                              ;;; To Display Branch & IFS Code
+    Local   : Field : Medium Prompt    	: Width     : 18% Page
+
+
+[Field:EXPINV UPIid]
+	Use		    : Name Field
+	Set as	    : @@KKSurgical_UPIId1
+	Style		: Tiny Bold
+	Width		: 32% Page
+	Inactive	: $$IsEmpty:@@VchBankName 
+
+
+
 
 
 [System:Formula]
